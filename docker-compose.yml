@@ -1,0 +1,35 @@
+#version: '3.8'
+
+services:
+  server:
+    image: golang:1.23-alpine
+    container_name: a_studio_server
+    volumes:
+      - .:/server
+    working_dir: /server/server
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres_db
+    entrypoint: go run cmd/main.go
+    restart: always
+    networks:
+      - netcore-dev
+  postgres_db:
+    image: postgres:17.2
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - ${HOST_DIR}:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+    - netcore-dev
+
+networks:
+  netcore-dev:
+    name: netcore-dev #顯示指定網路名稱
