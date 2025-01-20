@@ -17,10 +17,15 @@ func NewAuthorHandler(g *gin.Engine, svc domain.IAuthorService) {
 	handler := &AuthorHandler{
 		Service: svc,
 	}
-	g.GET("/author/ping", handler.Ping)
+	g.GET("api/v1/author/ping", handler.Ping)
 }
 
-// Ping will check server connection
+// @Summary Ping check server connection
+// @Tags Author
+// @version 1.0
+// @produce text/plain
+// @Success 200 string string 成功後返回的值
+// @Router /author/ping [get]
 func (h *AuthorHandler) Ping(c *gin.Context) {
 	res, err := h.Service.Ping(c)
 	if err != nil {

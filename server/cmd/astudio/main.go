@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 
+	_ "github.com/amosli/astudio/server/docs"
+
 	"github.com/amosli/astudio/server/author"
 	"github.com/amosli/astudio/server/internal/repository/postgres"
 	"github.com/amosli/astudio/server/internal/rest"
@@ -13,6 +15,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 )
 
@@ -20,6 +24,22 @@ func init() {
 	initEnvSetting()
 }
 
+// @title           a_studio API
+// @version         1.0
+// @description     This is a a_studio server celler server.
+
+// @contact.name   Amos Li
+// @contact.url    https://amos-do.github.io/AmosLi/index.html
+// @contact.email  amosli.sj@gmail.com
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8080
+// @BasePath  /api/v1
+
+// @securityDefinitions.basic  BasicAuth
+// schemes http
 func main() {
 	// init logger
 	logger := logger.NewLogger()
@@ -62,6 +82,9 @@ func main() {
 
 	// build rest delivery Layer
 	rest.NewAuthorHandler(g, authorService)
+
+	// prepare swagger
+	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Start server
 	serverAddr := fmt.Sprintf(":%s", os.Getenv("SERVER_PORT"))

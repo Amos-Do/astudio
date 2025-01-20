@@ -1,0 +1,30 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact:
+    email: amosli.sj@gmail.com
+    name: Amos Li
+    url: https://amos-do.github.io/AmosLi/index.html
+  description: This is a a_studio server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: a_studio API
+  version: "1.0"
+paths:
+  /author/ping:
+    get:
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Ping check server connection
+      tags:
+      - Author
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
