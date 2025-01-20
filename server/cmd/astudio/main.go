@@ -11,18 +11,18 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const (
-	HOST     = "postgres_db"
-	DATABASE = "a_studio"
-	USER     = "admin"
-	PASSWORD = "admin"
-)
+func init() {
+	initEnvSetting()
+}
 
 func main() {
+
 	// 連接 DB
 	db, err := sql.Open(
-		"postgres",
-		fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", HOST, USER, PASSWORD, DATABASE),
+		os.Getenv("DB_DRV"),
+		fmt.Sprintf(
+			"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+			os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_DB")),
 	)
 	if err != nil {
 		panic(err)
@@ -38,28 +38,23 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello World!!")
 	})
-	log.Fatal(http.ListenAndServe(":5000", nil))
+
+	serverAddr := fmt.Sprintf(":%s", os.Getenv("SERVER_PORT"))
+	fmt.Println("Start server", serverAddr)
+	log.Fatal(http.ListenAndServe(serverAddr, nil))
 }
 
 // init environment setting
 func initEnvSetting() {
 	// export MODE=dev
+	//
+	// execution specific env with one line
+	// $ MODE=dev go run main.go
 	env := os.Getenv("MODE")
-	if env == "" {
-		// default env
-		env = "dev"
-	}
 
 	// load different mode .env
 	// .local > .x > .env
 	godotenv.Load(".env." + env + ".local")
-	if env != "beta" {
-		godotenv.Load(".env.local")
-	}
 	godotenv.Load(".env." + env)
 	godotenv.Load() // The Original .env
-
-	fmt.Println("APP: ", os.Getenv("APP"))
-	fmt.Println("VERSION: ", os.Getenv("VERSION"))
-	fmt.Println("DB: ", os.Getenv("DB"))
 }
