@@ -4,10 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
+	"github.com/amosli/astudio/server/author"
+	"github.com/amosli/astudio/server/internal/repository/postgres"
+	"github.com/amosli/astudio/server/internal/rest"
 	"github.com/amosli/astudio/server/pkg/logger"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
@@ -49,24 +52,24 @@ func main() {
 	zap.L().Info("Successfully created connection to database")
 
 	// prepare gin
+	g := gin.Default()
 
 	// prepare repository
+	authorRepo := postgres.NewAuthorRepo(db)
 
 	// build service Layer
+	authorService := author.NewAuthorService(authorRepo)
 
-	// build delivery Layer
+	// build rest delivery Layer
+	rest.NewAuthorHandler(g, authorService)
 
-	// run a simple http server
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello World!!")
-	})
-
+	// Start server
 	serverAddr := fmt.Sprintf(":%s", os.Getenv("SERVER_PORT"))
 	zap.S().Infof("Start server %s", serverAddr)
-	log.Fatal(http.ListenAndServe(serverAddr, nil))
+	log.Fatal(g.Run(serverAddr))
 }
 
-// init environment setting
+// initEnvSetting will init environment setting
 func initEnvSetting() {
 	// export MODE=dev
 	//
