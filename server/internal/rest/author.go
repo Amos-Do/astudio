@@ -3,8 +3,8 @@ package rest
 import (
 	"net/http"
 
-	"github.com/amosli/astudio/server/domain"
-	"github.com/amosli/astudio/server/internal/rest/utils"
+	"github.com/Amos-Do/astudio/server/domain"
+	"github.com/Amos-Do/astudio/server/internal/rest/utils"
 	"github.com/gin-gonic/gin"
 )
 

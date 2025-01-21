@@ -6,12 +6,12 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/amosli/astudio/server/docs"
+	_ "github.com/Amos-Do/astudio/server/docs"
 
-	"github.com/amosli/astudio/server/author"
-	"github.com/amosli/astudio/server/internal/repository/postgres"
-	"github.com/amosli/astudio/server/internal/rest"
-	"github.com/amosli/astudio/server/pkg/logger"
+	"github.com/Amos-Do/astudio/server/author"
+	"github.com/Amos-Do/astudio/server/internal/repository/postgres"
+	"github.com/Amos-Do/astudio/server/internal/rest"
+	"github.com/Amos-Do/astudio/server/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"

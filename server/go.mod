@@ -1,4 +1,4 @@
-module github.com/amosli/astudio/server
+module github.com/Amos-Do/astudio/server
 
 go 1.23.1
 

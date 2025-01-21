@@ -3,7 +3,7 @@ package author
 import (
 	"context"
 
-	"github.com/amosli/astudio/server/domain"
+	"github.com/Amos-Do/astudio/server/domain"
 )
 
 type Service struct {
