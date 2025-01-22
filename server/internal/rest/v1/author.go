@@ -12,12 +12,12 @@ type AuthorHandler struct {
 	Service domain.IAuthorService
 }
 
-// NewAuthorHandler will initialize the author/ resources endpoint
-func NewAuthorHandler(g *gin.Engine, svc domain.IAuthorService) {
+// NewAuthorV1Handler will initialize the author/ resources endpoint
+func NewAuthorV1Handler(g *gin.RouterGroup, svc domain.IAuthorService) {
 	handler := &AuthorHandler{
 		Service: svc,
 	}
-	g.GET("api/v1/author/ping", handler.Ping)
+	g.GET("/author/ping", handler.Ping)
 }
 
 // @Summary Ping check server connection

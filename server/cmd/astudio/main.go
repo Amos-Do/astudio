@@ -8,9 +8,9 @@ import (
 
 	_ "github.com/Amos-Do/astudio/server/docs"
 
-	"github.com/Amos-Do/astudio/server/author"
 	"github.com/Amos-Do/astudio/server/internal/repository/postgres"
-	"github.com/Amos-Do/astudio/server/internal/rest"
+	"github.com/Amos-Do/astudio/server/internal/rest/v1"
+	"github.com/Amos-Do/astudio/server/internal/service/author"
 	"github.com/Amos-Do/astudio/server/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -71,17 +71,19 @@ func main() {
 	}
 	zap.L().Info("Successfully created connection to database")
 
-	// prepare gin
-	g := gin.Default()
-
 	// prepare repository
 	authorRepo := postgres.NewAuthorRepo(db)
 
 	// build service Layer
 	authorService := author.NewAuthorService(authorRepo)
 
+	// prepare gin
+	g := gin.Default()
+
+	// register v1 routes
+	restApiV1 := g.Group("/api/v1")
 	// build rest delivery Layer
-	rest.NewAuthorHandler(g, authorService)
+	rest.NewAuthorV1Handler(restApiV1, authorService)
 
 	// prepare swagger
 	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
