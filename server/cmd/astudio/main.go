@@ -9,6 +9,7 @@ import (
 	_ "github.com/Amos-Do/astudio/server/docs"
 
 	"github.com/Amos-Do/astudio/server/internal/repository/postgres"
+	"github.com/Amos-Do/astudio/server/internal/rest/middleware"
 	"github.com/Amos-Do/astudio/server/internal/rest/v1"
 	"github.com/Amos-Do/astudio/server/internal/service/author"
 	"github.com/Amos-Do/astudio/server/pkg/logger"
@@ -79,6 +80,7 @@ func main() {
 
 	// prepare gin
 	g := gin.Default()
+	g.Use(middleware.CORS())
 
 	// register v1 routes
 	restApiV1 := g.Group("/api/v1")
