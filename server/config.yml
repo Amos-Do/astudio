@@ -1,0 +1,22 @@
+app:
+  mode: dev
+  name: a_studio_api
+  version: "1.0.0"
+
+server:
+  run: debug # gin run mode
+  port: 5000
+
+log:
+  level: debug
+  savePath: ./logs
+  fileName: log
+  fileExt: log
+
+DB:
+  type: postgres
+  host: postgres_db
+  port: 5432
+  name: a_studio
+  username: admin
+  password: admin

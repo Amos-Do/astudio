@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 
+	"github.com/Amos-Do/astudio/server/config"
 	_ "github.com/Amos-Do/astudio/server/docs"
 
 	"github.com/Amos-Do/astudio/server/internal/repository/postgres"
@@ -14,16 +14,11 @@ import (
 	"github.com/Amos-Do/astudio/server/internal/service/author"
 	"github.com/Amos-Do/astudio/server/pkg/logger"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 )
-
-func init() {
-	initEnvSetting()
-}
 
 // @title           a_studio API
 // @version         1.0
@@ -42,23 +37,30 @@ func init() {
 // @securityDefinitions.basic  BasicAuth
 // schemes http
 func main() {
+	conf := config.New()
+
 	// init logger
-	logger := logger.NewLogger()
+	logger := logger.New(
+		logger.SetLogLevel(conf.Log.Level),
+		logger.SetLogSavePath(conf.Log.SavePath),
+		logger.SetLogFileName(conf.Log.FileName),
+		logger.SetLogFileExt(conf.Log.FileExt),
+	)
 	defer logger.Close()
 
 	zap.L().Info(
 		"set up env config...",
-		zap.String("APP", os.Getenv("APP")),
-		zap.String("VERSION", os.Getenv("VERSION")),
-		zap.String("POSTGRES_HOST", os.Getenv("POSTGRES_HOST")),
+		zap.String("APP", conf.App.Name),
+		zap.String("VERSION", conf.App.Version),
+		zap.String("DB_HOST", conf.DB.Host),
 	)
 
 	// prepare DB
 	db, err := sql.Open(
-		os.Getenv("DB_DRV"),
+		conf.DB.Type,
 		fmt.Sprintf(
 			"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-			os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_DB")),
+			conf.DB.Host, conf.DB.Port, conf.DB.Username, conf.DB.Password, conf.DB.Name),
 	)
 	if err != nil {
 		zap.L().Error("failed to connect db", zap.Error(err))
@@ -80,7 +82,7 @@ func main() {
 
 	// prepare gin
 	g := gin.Default()
-	g.Use(middleware.CORS())
+	g.Use(middleware.CORS(conf))
 
 	// register v1 routes
 	restApiV1 := g.Group("/api/v1")
@@ -91,22 +93,7 @@ func main() {
 	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Start server
-	serverAddr := fmt.Sprintf(":%s", os.Getenv("SERVER_PORT"))
+	serverAddr := fmt.Sprintf(":%s", conf.Server.Port)
 	zap.S().Infof("Start server %s", serverAddr)
 	log.Fatal(g.Run(serverAddr))
-}
-
-// initEnvSetting will init environment setting
-func initEnvSetting() {
-	// export MODE=dev
-	//
-	// execution specific env with one line
-	// $ MODE=dev go run main.go
-	env := os.Getenv("MODE")
-
-	// load different mode .env
-	// .local > .x > .env
-	godotenv.Load(".env." + env + ".local")
-	godotenv.Load(".env." + env)
-	godotenv.Load() // The Original .env
 }

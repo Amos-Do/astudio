@@ -13,20 +13,80 @@ import (
 type Logger struct {
 	logger    *zap.Logger
 	lumLogger *lumberjack.Logger
+
+	level    string
+	savePath string
+	fileName string
+	fileExt  string
 }
 
-func NewLogger() *Logger {
-	l := &Logger{}
+// OptionFunc defines the function to change the default configuration
+type OptionFunc func(*Logger)
+
+// SetLogLevel to change the default level
+func SetLogLevel(level string) OptionFunc {
+	return func(l *Logger) {
+		l.level = level
+	}
+}
+
+// SetLogSavePath to change the default savePath
+func SetLogSavePath(savePath string) OptionFunc {
+	return func(l *Logger) {
+		l.savePath = savePath
+	}
+}
+
+// SetLogFileName to change the default fileName
+func SetLogFileName(fileName string) OptionFunc {
+	return func(l *Logger) {
+		l.fileName = fileName
+	}
+}
+
+// SetLogFileExt to change the default fileExt
+func SetLogFileExt(fileExt string) OptionFunc {
+	return func(l *Logger) {
+		l.fileExt = fileExt
+	}
+}
+
+// New returns a new blank logger instance
+// By default, the configuration is:
+// - level: "debug"
+// - level: "./logs"
+// - level: "log"
+// - level: "log"
+func New(opts ...OptionFunc) *Logger {
+	l := &Logger{
+		level:    "debug",
+		savePath: "./logs",
+		fileName: "log",
+		fileExt:  "log",
+	}
+
+	return l.With(opts...).run()
+}
+
+// With returns a new logger instance with provided options
+func (l *Logger) With(opts ...OptionFunc) *Logger {
+	for _, opt := range opts {
+		opt(l)
+	}
+	return l
+}
+
+// run will initialize the lumlogger and zap
+func (l *Logger) run() *Logger {
 	l.newLumLogger()
 	l.newZapLogger()
-
 	return l
 }
 
 // new lumlogger
 // set log rolling files
 func (l *Logger) newLumLogger() {
-	fileName := filepath.FromSlash(fmt.Sprintf("%s/%s.%s", os.Getenv("LOG_SAVE_PATH"), os.Getenv("LOG_FILE_NAME"), os.Getenv("LOG_FILE_EXT")))
+	fileName := filepath.FromSlash(fmt.Sprintf("%s/%s.%s", l.savePath, l.fileName, l.fileExt))
 	l.lumLogger = &lumberjack.Logger{
 		Filename:   fileName,
 		MaxSize:    1,     // megabytes
@@ -38,7 +98,7 @@ func (l *Logger) newLumLogger() {
 
 // new zap logger
 func (l *Logger) newZapLogger() {
-	level := zap.NewAtomicLevelAt(l.getLevellogger(os.Getenv("LOG_LEVEL")))
+	level := zap.NewAtomicLevelAt(l.getLevellogger(l.level))
 	encoderCfg := zap.NewProductionEncoderConfig()
 	encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
 
