@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/Amos-Do/astudio/server/config"
 	"github.com/Amos-Do/astudio/server/docs"
@@ -81,6 +82,7 @@ func main() {
 	// prepare gin
 	g := gin.Default()
 	g.Use(middleware.CORS(conf))
+	g.Use(middleware.SetRequestWithTimeout(3000 * time.Millisecond))
 
 	// register v1 routes
 	restApiV1 := g.Group("/api/v1")
