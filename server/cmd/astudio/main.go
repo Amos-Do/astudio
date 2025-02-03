@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/Amos-Do/astudio/server/config"
-	_ "github.com/Amos-Do/astudio/server/docs"
+	"github.com/Amos-Do/astudio/server/docs"
 
 	"github.com/Amos-Do/astudio/server/internal/repository/postgres"
 	"github.com/Amos-Do/astudio/server/internal/rest/middleware"
@@ -21,7 +21,6 @@ import (
 )
 
 // @title           a_studio API
-// @version         1.0
 // @description     This is a a_studio server celler server.
 
 // @contact.name   Amos Li
@@ -31,7 +30,6 @@ import (
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host      localhost:8080
 // @BasePath  /api/v1
 
 // @securityDefinitions.basic  BasicAuth
@@ -91,6 +89,8 @@ func main() {
 
 	// prepare swagger
 	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%s", conf.Server.Port)
+	docs.SwaggerInfo.Version = conf.App.Version
 
 	// Start server
 	serverAddr := fmt.Sprintf(":%s", conf.Server.Port)

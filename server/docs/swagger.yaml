@@ -1,5 +1,4 @@
 basePath: /api/v1
-host: localhost:8080
 info:
   contact:
     email: amosli.sj@gmail.com
@@ -10,7 +9,6 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: a_studio API
-  version: "1.0"
 paths:
   /author/ping:
     get:
