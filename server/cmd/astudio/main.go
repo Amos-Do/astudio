@@ -84,10 +84,11 @@ func main() {
 	g.Use(middleware.CORS(conf))
 	g.Use(middleware.SetRequestWithTimeout(3000 * time.Millisecond))
 
-	// register v1 routes
-	restApiV1 := g.Group("/api/v1")
 	// build rest delivery Layer
-	rest.NewAuthorV1Handler(restApiV1, authorService)
+	// register v1 routes
+	rest.SetupV1Api(conf, g, rest.Usecase{
+		AuthorService: authorService,
+	})
 
 	// prepare swagger
 	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

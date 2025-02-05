@@ -20,3 +20,9 @@ DB:
   name: a_studio
   username: admin
   password: admin
+
+token:
+  accessExpiryMs: 7200
+  accessSecret: access_token_secret
+  refreshExpiryMs: 86400
+  refreshSecret: refresh_token_secret

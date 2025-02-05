@@ -13,6 +13,7 @@ type Config struct {
 	Server ServerConf
 	Log    LogConf
 	DB     DBConf
+	Token  TokenConf
 }
 
 type AppConf struct {
@@ -40,6 +41,13 @@ type DBConf struct {
 	Name     string
 	Username string
 	Password string
+}
+
+type TokenConf struct {
+	AccessExpiryMs  int
+	AccessSecret    string
+	RefreshExpiryMs int
+	RefreshSecret   string
 }
 
 // New returns a new configuration that have been read
