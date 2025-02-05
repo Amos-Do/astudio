@@ -18,6 +18,6 @@ var (
 	ErrBadParamInput = errors.New("given Param is not valid")
 	// ErrNotAuthorized will throw if the authorization is not authorized
 	ErrNotAuthorized = errors.New("not authorized")
-	// ErrGetwayTimeout will throw if the requies is timeout
+	// ErrGetwayTimeout will throw if the request is timeout
 	ErrGetwayTimeout = errors.New("timeout")
 )
