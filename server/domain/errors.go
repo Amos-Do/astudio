@@ -2,6 +2,11 @@ package domain
 
 import "errors"
 
+// ErrorResponse represent the response error struct
+type ErrorResponse struct {
+	Message string `json:"message"`
+}
+
 var (
 	// ErrInternalServerError will throw if any the Internal Server Error happen
 	ErrInternalServerError = errors.New("internal Server Error")
@@ -11,4 +16,8 @@ var (
 	ErrConflict = errors.New("your Item already exist")
 	// ErrBadParamInput will throw if the given request-body or params is not valid
 	ErrBadParamInput = errors.New("given Param is not valid")
+	// ErrNotAuthorized will throw if the authorization is not authorized
+	ErrNotAuthorized = errors.New("not authorized")
+	// ErrGetwayTimeout will throw if the requies is timeout
+	ErrGetwayTimeout = errors.New("timeout")
 )

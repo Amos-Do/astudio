@@ -29,7 +29,7 @@ func NewAuthorV1Handler(g *gin.RouterGroup, svc domain.IAuthorService) {
 func (h *AuthorHandler) Ping(c *gin.Context) {
 	res, err := h.Service.Ping(c)
 	if err != nil {
-		c.JSON(utils.GetStatusCode(err), utils.ResponseErr{Message: err.Error()})
+		c.JSON(utils.GetStatusCode(err), domain.ErrorResponse{Message: err.Error()})
 		return
 	}
 
