@@ -23,6 +23,12 @@ services:
     restart: always
     volumes:
       - ${DB_HOSTDIR}:/var/lib/postgresql/data # Provided by ./.env
+      # copy the sql script to init vendor tables
+      - ./server/script/postgres/init_vendor.sql:/docker-entrypoint-initdb.d/init_vendor.sql
+      # copy the sql script to init tables
+      - ./server/script/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # copy the sql script to migration tables
+      - ./server/script/postgres/migration_20250212.sql:/docker-entrypoint-initdb.d/migration_20250212.sql
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USERNAME}
