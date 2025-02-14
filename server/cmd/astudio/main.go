@@ -21,19 +21,22 @@ import (
 	"go.uber.org/zap"
 )
 
-// @title           a_studio API
-// @description     This is a a_studio server celler server.
+//	@title			a_studio API
+//	@description	This is a a_studio server celler server.
 
-// @contact.name   Amos Li
-// @contact.url    https://amos-do.github.io/AmosLi/index.html
-// @contact.email  amosli.sj@gmail.com
+//	@contact.name	Amos Li
+//	@contact.url	https://amos-do.github.io/AmosLi/index.html
+//	@contact.email	amosli.sj@gmail.com
 
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @BasePath  /api/v1
+//	@BasePath	/api/v1
 
-// @securityDefinitions.basic  BasicAuth
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
+
 // schemes http
 func main() {
 	conf := config.New()

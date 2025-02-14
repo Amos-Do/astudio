@@ -1,4 +1,36 @@
 basePath: /api/v1
+definitions:
+  domain.AuthToken:
+    properties:
+      access_expiry:
+        type: integer
+      access_token:
+        type: string
+      refresh_expiry:
+        type: integer
+      refresh_token:
+        type: string
+    type: object
+  domain.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  domain.SignupRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
 info:
   contact:
     email: amosli.sj@gmail.com
@@ -10,10 +42,66 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: a_studio API
 paths:
-  /auth/ping:
+  /auth/login:
+    post:
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AuthToken'
+      summary: Vendor login system
+      tags:
+      - Auth
+  /auth/refresh:
+    get:
+      parameters:
+      - description: refresh_token
+        in: query
+        name: refresh_token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AuthToken'
+      summary: Vendor refresh token
+      tags:
+      - Auth
+  /auth/signup:
+    post:
+      parameters:
+      - description: data
+        in: body
+        name: email
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.AuthToken'
+      summary: Vendor signup system
+      tags:
+      - Auth
+  /ping:
     get:
       produces:
-        - text/plain
+      - text/plain
       responses:
         "200":
           description: OK
@@ -21,8 +109,10 @@ paths:
             type: string
       summary: Ping check server connection
       tags:
-        - Auth
+      - Auth
 securityDefinitions:
-  BasicAuth:
-    type: basic
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
