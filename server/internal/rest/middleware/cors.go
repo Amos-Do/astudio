@@ -25,12 +25,12 @@ func corsConfig(conf *config.Config) cors.Config {
 		// allow all settings like origins, methos and headers
 		corsConf.AllowAllOrigins = true
 		corsConf.AllowMethods = []string{"GET", "POST", "DELETE", "OPTIONS", "PUT"}
-		corsConf.AllowHeaders = []string{"Authorization", "Content-Type", "Upgrade", "Origin",
+		corsConf.AllowHeaders = []string{"Authization", "Content-Type", "Upgrade", "Origin",
 			"Connection", "Accept-Encoding", "Accept-Language", "Host"}
 	} else {
 		// production env
 		// corsConf.AllowMethods = []string{"GET", "POST", "DELETE", "OPTIONS", "PUT"}
-		// corsConf.AllowHeaders = []string{"Authorization", "Content-Type", "Origin",
+		// corsConf.AllowHeaders = []string{"Authization", "Content-Type", "Origin",
 		// "Connection", "Accept-Encoding", "Accept-Language", "Host"}
 		// corsConf.AllowOrigins = []string{"https://www.example.com"}
 	}

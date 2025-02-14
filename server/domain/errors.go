@@ -16,8 +16,8 @@ var (
 	ErrConflict = errors.New("your Item already exist")
 	// ErrBadParamInput will throw if the given request-body or params is not valid
 	ErrBadParamInput = errors.New("given Param is not valid")
-	// ErrNotAuthorized will throw if the authorization is not authorized
-	ErrNotAuthorized = errors.New("not authorized")
+	// ErrNotAuthized will throw if the authization is not authized
+	ErrNotAuthized = errors.New("not authized")
 	// ErrGetwayTimeout will throw if the request is timeout
 	ErrGetwayTimeout = errors.New("timeout")
 )

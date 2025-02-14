@@ -12,7 +12,7 @@ import (
 	"github.com/Amos-Do/astudio/server/internal/repository/postgres"
 	"github.com/Amos-Do/astudio/server/internal/rest/middleware"
 	"github.com/Amos-Do/astudio/server/internal/rest/v1"
-	"github.com/Amos-Do/astudio/server/internal/service/author"
+	"github.com/Amos-Do/astudio/server/internal/service/auth"
 	"github.com/Amos-Do/astudio/server/pkg/logger"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -74,10 +74,10 @@ func main() {
 	zap.L().Info("Successfully created connection to database")
 
 	// prepare repository
-	authorRepo := postgres.NewAuthorRepo(db)
+	authRepo := postgres.NewAuthRepo(db)
 
 	// build service Layer
-	authorService := author.NewAuthorService(authorRepo)
+	authService := auth.NewAuthService(authRepo)
 
 	// prepare gin
 	g := gin.Default()
@@ -87,7 +87,7 @@ func main() {
 	// build rest delivery Layer
 	// register v1 routes
 	rest.SetupV1Api(conf, g, rest.Usecase{
-		AuthorService: authorService,
+		AuthService: authService,
 	})
 
 	// prepare swagger

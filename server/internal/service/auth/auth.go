@@ -1,4 +1,4 @@
-package author
+package auth
 
 import (
 	"context"
@@ -7,11 +7,11 @@ import (
 )
 
 type Service struct {
-	Repo domain.IAuthorRepo
+	Repo domain.IAuthRepo
 }
 
-// NewAuthorService will create a article service object
-func NewAuthorService(repo domain.IAuthorRepo) *Service {
+// NewAuthService will create a article service object
+func NewAuthService(repo domain.IAuthRepo) *Service {
 	return &Service{repo}
 }
 

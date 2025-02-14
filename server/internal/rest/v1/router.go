@@ -8,7 +8,7 @@ import (
 )
 
 type Usecase struct {
-	AuthorService domain.IAuthorService
+	AuthService domain.IAuthService
 }
 
 // SetupV1Api handle the all 'v1' api router initialization
@@ -16,7 +16,7 @@ func SetupV1Api(conf *config.Config, g *gin.Engine, usecase Usecase) {
 	v1 := g.Group("/api/v1")
 
 	// Public APIs
-	NewAuthorV1Handler(v1, usecase.AuthorService)
+	NewAuthV1Handler(v1, usecase.AuthService)
 
 	// Protect APIs
 	protectRouter := v1.Group("")

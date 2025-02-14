@@ -9,7 +9,7 @@ import (
 )
 
 // CreateAccessToken will create jwt token with custom claims
-func CreateAccessToken(user *domain.Author, secret string, expiry int) (accessToken string, err error) {
+func CreateAccessToken(user *domain.Auth, secret string, expiry int) (accessToken string, err error) {
 	exp := time.Now().Add(time.Millisecond * time.Duration(expiry))
 	claims := &domain.JwtCustomClaims{
 		Name: user.Name,
@@ -27,7 +27,7 @@ func CreateAccessToken(user *domain.Author, secret string, expiry int) (accessTo
 }
 
 // CreateRefreshToken will create jwt token with custom claims
-func CreateRefreshToken(user *domain.Author, secret string, expriy int) (refreshToken string, err error) {
+func CreateRefreshToken(user *domain.Auth, secret string, expriy int) (refreshToken string, err error) {
 	claimsRefresh := &domain.JwtCustomRefreshClaims{
 		ID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -42,8 +42,8 @@ func CreateRefreshToken(user *domain.Author, secret string, expriy int) (refresh
 	return refreshToken, nil
 }
 
-// IsAuthorized will parse the token to validate the signature with token secret
-func IsAuthorized(requestToken string, secret string) (bool, error) {
+// IsAuthized will parse the token to validate the signature with token secret
+func IsAuthized(requestToken string, secret string) (bool, error) {
 	_, err := jwt.Parse(requestToken, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])

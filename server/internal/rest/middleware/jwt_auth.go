@@ -9,23 +9,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// JwtAuth will handle Authorization jwt token middleware
+// JwtAuth will handle Authization jwt token middleware
 func JwtAuth(secret string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.Request.Header.Get("Authorization")
+		authHeader := c.Request.Header.Get("Authization")
 		t := strings.Split(authHeader, " ")
 
-		// check Authorization param
+		// check Authization param
 		if len(t) == 2 {
 			authToken := t[1]
-			authorized, err := tokenutil.IsAuthorized(authToken, secret)
+			authized, err := tokenutil.IsAuthized(authToken, secret)
 
-			// check the token is authorized
-			if authorized {
+			// check the token is authized
+			if authized {
 				// extract the ID from token
 				userID, err := tokenutil.ExtractIDFromToken(authToken, secret)
 				if err != nil {
-					c.JSON(utils.GetStatusCode(domain.ErrNotAuthorized), domain.ErrorResponse{
+					c.JSON(utils.GetStatusCode(domain.ErrNotAuthized), domain.ErrorResponse{
 						Message: err.Error(),
 					})
 					c.Abort()
@@ -35,14 +35,14 @@ func JwtAuth(secret string) gin.HandlerFunc {
 				c.Next()
 				return
 			}
-			c.JSON(utils.GetStatusCode(domain.ErrNotAuthorized), domain.ErrorResponse{
+			c.JSON(utils.GetStatusCode(domain.ErrNotAuthized), domain.ErrorResponse{
 				Message: err.Error(),
 			})
 			c.Abort()
 			return
 		}
-		c.JSON(utils.GetStatusCode(domain.ErrNotAuthorized), domain.ErrorResponse{
-			Message: domain.ErrNotAuthorized.Error(),
+		c.JSON(utils.GetStatusCode(domain.ErrNotAuthized), domain.ErrorResponse{
+			Message: domain.ErrNotAuthized.Error(),
 		})
 		c.Abort()
 	}

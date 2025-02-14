@@ -10,10 +10,10 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: a_studio API
 paths:
-  /author/ping:
+  /auth/ping:
     get:
       produces:
-      - text/plain
+        - text/plain
       responses:
         "200":
           description: OK
@@ -21,7 +21,7 @@ paths:
             type: string
       summary: Ping check server connection
       tags:
-      - Author
+        - Auth
 securityDefinitions:
   BasicAuth:
     type: basic

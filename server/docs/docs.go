@@ -23,13 +23,13 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/author/ping": {
+        "/auth/ping": {
             "get": {
                 "produces": [
                     "text/plain"
                 ],
                 "tags": [
-                    "Author"
+                    "Auth"
                 ],
                 "summary": "Ping check server connection",
                 "responses": {
