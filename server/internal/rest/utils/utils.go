@@ -19,10 +19,15 @@ func GetStatusCode(err error) int {
 		return http.StatusInternalServerError
 	case domain.ErrNotFound:
 		return http.StatusNotFound
-	case domain.ErrConflict:
+	case domain.ErrConflict,
+		domain.ErrConflictCreateExistsAuthAccount:
 		return http.StatusConflict
+	case domain.ErrBadParamInput:
+		return http.StatusBadRequest
 	case domain.ErrNotAuthized:
 		return http.StatusUnauthorized
+	case domain.ErrGetwayTimeout:
+		return http.StatusGatewayTimeout
 	default:
 		return http.StatusInternalServerError
 	}

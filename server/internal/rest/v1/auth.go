@@ -47,7 +47,6 @@ func (h *AuthHandler) Ping(c *gin.Context) {
 // @Success	200		{object}	domain.AuthToken
 // @Router		/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
-
 }
 
 // @Summary	Vendor signup system
@@ -58,7 +57,27 @@ func (h *AuthHandler) Login(c *gin.Context) {
 // @Success	200		{object}	domain.AuthToken
 // @Router		/auth/signup [post]
 func (h *AuthHandler) Signup(c *gin.Context) {
+	var req domain.SignupRequest
+	if err := c.ShouldBind(&req); err != nil {
+		c.JSON(utils.GetStatusCode(domain.ErrBadParamInput), domain.ErrorResponse{
+			Message: err.Error(),
+		})
+		return
+	}
 
+	auth := domain.Auth{
+		Account:  req.Email,
+		Password: req.Password,
+	}
+	authToken, err := h.Service.Signup(c, auth)
+	if err != nil {
+		c.JSON(utils.GetStatusCode(err), domain.ErrorResponse{
+			Message: err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, authToken)
 }
 
 // @Summary	Vendor refresh token

@@ -80,7 +80,7 @@ func main() {
 	authRepo := postgres.NewAuthRepo(db)
 
 	// build service Layer
-	authService := auth.NewAuthService(authRepo)
+	authService := auth.NewAuthService(conf, authRepo)
 
 	// prepare gin
 	g := gin.Default()

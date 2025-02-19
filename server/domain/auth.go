@@ -1,13 +1,19 @@
 package domain
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 // Auth representing the Auth data struct
 type Auth struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
+	ID        int64     `json:"id"`
+	Name      string    `json:"name"`
+	Birthday  time.Time `json:"birthday"`
+	Account   string    `json:"account"`
+	Password  string    `json:"password"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type AuthToken struct {
@@ -24,15 +30,20 @@ type SignupRequest struct {
 }
 
 type LoginRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" form:"email" binding:"required,email"`
+	Password string `json:"password" form:"password" binding:"required"`
 }
 
 // IAuthRepo represent the Auth's repository contrat
 type IAuthRepo interface {
+	GetByEmail(c context.Context, email string) (Auth, error)
+	Create(c context.Context, auth *Auth) error
 }
 
 // IAuthService represent the Auth's usecases
 type IAuthService interface {
 	Ping(c context.Context) (string, error)
+	Login(c context.Context) (AuthToken, error)
+	Signup(c context.Context, auth Auth) (AuthToken, error)
+	RefreshToken(c context.Context) (AuthToken, error)
 }

@@ -14,6 +14,8 @@ var (
 	ErrNotFound = errors.New("your requested Item is not found")
 	// ErrConflict will throw if the current action already exists
 	ErrConflict = errors.New("your Item already exist")
+	// ErrCreateExistsAuthUser will throw if the user account already exists with the given email
+	ErrConflictCreateExistsAuthAccount = errors.New("user already exists with the given email")
 	// ErrBadParamInput will throw if the given request-body or params is not valid
 	ErrBadParamInput = errors.New("given Param is not valid")
 	// ErrNotAuthized will throw if the authization is not authized
