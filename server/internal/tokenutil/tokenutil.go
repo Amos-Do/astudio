@@ -9,8 +9,8 @@ import (
 )
 
 // CreateAccessToken will create jwt token with custom claims
-func CreateAccessToken(user *domain.Auth, secret string, expiry int) (accessToken string, err error) {
-	exp := time.Now().Add(time.Millisecond * time.Duration(expiry))
+func CreateAccessToken(user *domain.Auth, secret string, expiry int) (accessToken string, exp time.Time, err error) {
+	exp = time.Now().Add(time.Millisecond * time.Duration(expiry))
 	claims := &domain.JwtCustomClaims{
 		Name: user.Name,
 		ID:   user.ID,
@@ -21,25 +21,26 @@ func CreateAccessToken(user *domain.Auth, secret string, expiry int) (accessToke
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	accessToken, err = token.SignedString([]byte(secret))
 	if err != nil {
-		return "", err
+		return "", exp, err
 	}
-	return accessToken, nil
+	return accessToken, exp, nil
 }
 
 // CreateRefreshToken will create jwt token with custom claims
-func CreateRefreshToken(user *domain.Auth, secret string, expriy int) (refreshToken string, err error) {
+func CreateRefreshToken(user *domain.Auth, secret string, expriy int) (refreshToken string, exp time.Time, err error) {
+	exp = time.Now().Add(time.Millisecond * time.Duration(expriy))
 	claimsRefresh := &domain.JwtCustomRefreshClaims{
 		ID: user.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Millisecond * time.Duration(expriy))),
+			ExpiresAt: jwt.NewNumericDate(exp),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claimsRefresh)
 	refreshToken, err = token.SignedString([]byte(secret))
 	if err != nil {
-		return "", err
+		return "", exp, err
 	}
-	return refreshToken, nil
+	return refreshToken, exp, nil
 }
 
 // IsAuthized will parse the token to validate the signature with token secret
