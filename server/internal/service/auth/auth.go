@@ -43,6 +43,7 @@ func (s *Service) Signup(c context.Context, auth domain.Auth) (domain.AuthToken,
 		return domain.AuthToken{}, err
 	}
 	auth.Password = encryptedPassword
+	auth.Name = auth.Account // default name
 
 	err = s.Repo.Create(c, &auth)
 	if err != nil {

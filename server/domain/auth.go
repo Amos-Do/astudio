@@ -2,18 +2,19 @@ package domain
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
 // Auth representing the Auth data struct
 type Auth struct {
-	ID        int64     `json:"id"`
-	Name      string    `json:"name"`
-	Birthday  time.Time `json:"birthday"`
-	Account   string    `json:"account"`
-	Password  string    `json:"password"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        int64        `json:"id"`
+	Name      string       `json:"name"`
+	Birthday  sql.NullTime `json:"birthday"`
+	Account   string       `json:"account"`
+	Password  string       `json:"password"`
+	CreatedAt time.Time    `json:"created_at"`
+	UpdatedAt time.Time    `json:"updated_at"`
 }
 
 type AuthToken struct {

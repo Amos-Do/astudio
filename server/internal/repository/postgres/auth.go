@@ -58,7 +58,7 @@ func (m *AuthRepo) GetByEmail(c context.Context, email string) (domain.Auth, err
 	var res = domain.Auth{}
 
 	query := `SELECT id, name, birthday, account, password, created_at, updated_at
-				FROM users WHERE account = ?;`
+				FROM users WHERE account = $1`
 	list, err := m.fetch(c, query, email)
 	if err != nil {
 		return res, err
@@ -73,22 +73,33 @@ func (m *AuthRepo) GetByEmail(c context.Context, email string) (domain.Auth, err
 }
 
 func (m *AuthRepo) Create(c context.Context, auth *domain.Auth) error {
-	query := `INSERT INTO users (account, password)
-				VALUES (?, ?);`
+	query := `INSERT INTO users (name, account, password)
+				VALUES ($1, $2, $3) RETURNING id`
 	stmt, err := m.DB.PrepareContext(c, query)
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 
-	res, err := stmt.ExecContext(c, auth.Account, auth.Password)
+	var userID int64
+	err = stmt.QueryRow(auth.Name, auth.Account, auth.Password).Scan(&userID)
 	if err != nil {
 		return err
 	}
 
-	lastID, err := res.LastInsertId()
-	if err != nil {
-		return err
-	}
-	auth.ID = lastID
+	auth.ID = userID
 	return nil
+
+	// postgres not support LastInsertId()
+	// res, err := stmt.ExecContext(c, auth.Account, auth.Password)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// lastID, err := res.LastInsertId()
+	// if err != nil {
+	// 	return err
+	// }
+	// auth.ID = lastID
+	// return nil
 }
