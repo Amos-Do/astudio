@@ -72,6 +72,24 @@ func (m *AuthRepo) GetByEmail(c context.Context, email string) (domain.Auth, err
 	}
 }
 
+func (m *AuthRepo) GetByID(c context.Context, id int64) (domain.Auth, error) {
+	var res = domain.Auth{}
+
+	query := `SELECT id, name, birthday, account, password, created_at, updated_at
+				FROM users WHERE id = $1`
+	list, err := m.fetch(c, query, id)
+	if err != nil {
+		return res, err
+	}
+
+	if len(list) > 0 {
+		res = list[0]
+		return res, nil
+	} else {
+		return res, domain.ErrNotFound
+	}
+}
+
 func (m *AuthRepo) Create(c context.Context, auth *domain.Auth) error {
 	query := `INSERT INTO users (name, account, password)
 				VALUES ($1, $2, $3) RETURNING id`

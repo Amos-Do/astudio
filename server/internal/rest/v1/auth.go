@@ -47,6 +47,27 @@ func (h *AuthHandler) Ping(c *gin.Context) {
 // @Success	200		{object}	domain.AuthToken
 // @Router		/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
+	var req domain.LoginRequest
+	if err := c.ShouldBind(&req); err != nil {
+		c.JSON(utils.GetStatusCode(domain.ErrBadParamInput), domain.ErrorResponse{
+			Message: err.Error(),
+		})
+		return
+	}
+
+	auth := domain.Auth{
+		Account:  req.Email,
+		Password: req.Password,
+	}
+	authToken, err := h.Service.Login(c, auth)
+	if err != nil {
+		c.JSON(utils.GetStatusCode(err), domain.ErrorResponse{
+			Message: err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, authToken)
 }
 
 // @Summary	Vendor signup system
@@ -88,5 +109,20 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 // @Success	200				{object}	domain.AuthToken
 // @Router		/auth/refresh [get]
 func (h *AuthHandler) RefreshToken(c *gin.Context) {
+	var req domain.RefreshTokenRequest
+	if err := c.ShouldBind(&req); err != nil {
+		c.JSON(utils.GetStatusCode(domain.ErrBadParamInput), domain.ErrorResponse{
+			Message: err.Error(),
+		})
+		return
+	}
+	authToken, err := h.Service.RefreshToken(c, req.RefreshToken)
+	if err != nil {
+		c.JSON(utils.GetStatusCode(err), domain.ErrorResponse{
+			Message: err.Error(),
+		})
+		return
+	}
 
+	c.JSON(http.StatusOK, authToken)
 }

@@ -35,16 +35,21 @@ type LoginRequest struct {
 	Password string `json:"password" form:"password" binding:"required"`
 }
 
+type RefreshTokenRequest struct {
+	RefreshToken string `form:"refresh_token" binding:"required"`
+}
+
 // IAuthRepo represent the Auth's repository contrat
 type IAuthRepo interface {
 	GetByEmail(c context.Context, email string) (Auth, error)
+	GetByID(c context.Context, id int64) (Auth, error)
 	Create(c context.Context, auth *Auth) error
 }
 
 // IAuthService represent the Auth's usecases
 type IAuthService interface {
 	Ping(c context.Context) (string, error)
-	Login(c context.Context) (AuthToken, error)
+	Login(c context.Context, auth Auth) (AuthToken, error)
 	Signup(c context.Context, auth Auth) (AuthToken, error)
-	RefreshToken(c context.Context) (AuthToken, error)
+	RefreshToken(c context.Context, refreshToken string) (AuthToken, error)
 }
