@@ -58,7 +58,7 @@ func IsAuthized(requestToken string, secret string) (bool, error) {
 }
 
 // ExtractIDFromToken will extract the ID from token
-func ExtractIDFromToken(requestToken string, secret string) (string, error) {
+func ExtractIDFromToken(requestToken string, secret string) (int64, error) {
 	token, err := jwt.Parse(requestToken, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
@@ -66,12 +66,13 @@ func ExtractIDFromToken(requestToken string, secret string) (string, error) {
 		return []byte(secret), nil
 	})
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok && !token.Valid {
-		return "", fmt.Errorf("invalid token")
+		return 0, fmt.Errorf("invalid token")
 	}
-	return claims["id"].(string), nil
+
+	return int64(claims["id"].(float64)), nil
 }
